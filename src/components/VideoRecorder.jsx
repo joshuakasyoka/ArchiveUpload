@@ -27,7 +27,7 @@ const VideoRecorder = () => {
 
   const fetchRecordings = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/recordings');
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/recordings`);
       const data = await response.json();
       setRecordings(data);
     } catch (err) {
@@ -171,18 +171,15 @@ const VideoRecorder = () => {
       setStatus('processing');
       setError(null);
       
-      // Get the MIME type from the MediaRecorder
       const mimeType = mediaRecorderRef.current?.mimeType || 'video/mp4';
       console.log('Creating blob with MIME type:', mimeType);
       
-      // Create blob with explicit MIME type
       const videoBlob = new Blob(recordedChunks, { 
         type: mimeType.includes('mp4') ? 'video/mp4' : 
               mimeType.includes('webm') ? 'video/webm' : 
               'video/mp4'
       });
       
-      // Create a more descriptive filename
       const extension = mimeType.includes('webm') ? '.webm' : '.mp4';
       const filename = `recording-${Date.now()}${extension}`;
       
@@ -195,12 +192,7 @@ const VideoRecorder = () => {
       const formData = new FormData();
       formData.append('video', videoBlob, filename);
   
-      // Log the FormData (for debugging)
-      for (let [key, value] of formData.entries()) {
-        console.log('FormData entry:', key, value instanceof Blob ? value.type : value);
-      }
-  
-      const response = await fetch('http://localhost:5000/api/upload', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/upload`, {
         method: 'POST',
         body: formData
       });
