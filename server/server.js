@@ -20,7 +20,9 @@ const storage = multer.diskStorage({
     cb(null, dir);
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
+    const ext = file.mimetype.includes('quicktime') ? '.mov' : 
+               file.mimetype.includes('mp4') ? '.mp4' : '.webm';
+    cb(null, Date.now() + ext);
   }
 });
 

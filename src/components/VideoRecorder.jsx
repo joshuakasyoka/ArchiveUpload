@@ -28,6 +28,7 @@ const VideoRecorder = () => {
     }
   };
 
+
   const startRecording = async () => {
     try {
       setError(null);
